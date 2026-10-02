@@ -16,8 +16,8 @@ int main()
   int shared = shm_open(SHARED_MEMORY_NAME, fl, mode);
   int prot = PROT_READ, flags = MAP_SHARED;
   auto ptr = (char*)mmap(NULL, num, prot, flags, shared, 0);
-  std::string* data = reinterpret_cast<std::string*>(ptr);
-  std::cout << *data << '\n';
+  std::string data(ptr, num);
+  std::cout << data << '\n';
   munmap(ptr, num);
   close(shared);
 }

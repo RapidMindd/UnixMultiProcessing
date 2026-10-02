@@ -30,12 +30,12 @@ int main()
   ftruncate(shared, data.size());
   int prot = PROT_READ | PROT_WRITE;
   int flags = MAP_SHARED;
-  auto ptr = (char*)mmap(NULL, sizeof(data), prot, flags, shared, 0);
-  strncpy(ptr, reinterpret_cast< char* >(data.data()), sizeof(data));
-  munmap(ptr, sizeof(data));
+  auto ptr = (char*)mmap(NULL, data.size(), prot, flags, shared, 0);
+  memcpy(ptr, data.data(), data.size());
+  munmap(ptr, data.size());
   char p[256];
-  sprintf(p, "%d", sizeof(data));
-  pass(err, wr, p, 8);
+  int len = sprintf(p, "%zu", data.size());
+  pass(err, wr, p, len);
   close(wr);
   close(shared);
   waitpid(pid, 0, 0);
