@@ -23,6 +23,7 @@ int main()
     close(rd);
     execl("child", "child", NULL);
   }
+  close(rd);
   auto fl = O_RDWR | O_CREAT | O_TRUNC;
   auto mode = S_IRUSR | S_IWUSR;
   int shared = shm_open(SHARED_MEMORY_NAME, fl, mode);
@@ -32,7 +33,7 @@ int main()
   auto ptr = (char*)mmap(NULL, sizeof(data), prot, flags, shared, 0);
   strncpy(ptr, reinterpret_cast< char* >(data.data()), sizeof(data));
   munmap(ptr, sizeof(data));
-  char* p = nullptr;
+  char p[256];
   sprintf(p, "%d", sizeof(data));
   pass(err, wr, p, 8);
   close(wr);
